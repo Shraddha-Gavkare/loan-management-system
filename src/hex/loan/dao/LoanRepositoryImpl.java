@@ -26,8 +26,8 @@ public class LoanRepositoryImpl implements ILoanRepository {
         PreparedStatement customerStmt = null;
         PreparedStatement loanStmt = null;
 
-        try {
-            conn = DBConnUtil.getDBConn();
+        try {conn = DBConnUtil.getDbConnection();
+
             conn.setAutoCommit(false);
 
             // 1. Insert Customer
@@ -74,7 +74,8 @@ public class LoanRepositoryImpl implements ILoanRepository {
     @Override
     public double calculateInterest(int loanId) throws InvalidLoanException {
         String sql = "SELECT principal_amount, interest_rate, loan_term FROM Loan WHERE loan_id = ?";
-        try (Connection conn = DBConnUtil.getDBConn();
+        try (Connection conn = DBConnUtil.getDbConnection();
+
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, loanId);
@@ -106,7 +107,8 @@ public String loanStatus(int loanId) throws InvalidLoanException {
     String selectSQL = "SELECT l.loan_id, c.credit_score FROM Loan l JOIN Customer c ON l.customer_id = c.customer_id WHERE l.loan_id = ?";
     String updateSQL = "UPDATE Loan SET loan_status = ? WHERE loan_id = ?";
 
-    try (Connection conn = DBConnUtil.getDBConn();
+    try (Connection conn = DBConnUtil.getDbConnection();
+
          PreparedStatement selectStmt = conn.prepareStatement(selectSQL);
          PreparedStatement updateStmt = conn.prepareStatement(updateSQL)) {
 
@@ -135,7 +137,8 @@ public String loanStatus(int loanId) throws InvalidLoanException {
 @Override
 public double calculateEMI(int loanId) throws InvalidLoanException {
     String sql = "SELECT principal_amount, interest_rate, loan_term FROM Loan WHERE loan_id = ?";
-    try (Connection conn = DBConnUtil.getDBConn();
+    try ( Connection conn = DBConnUtil.getDbConnection();
+
          PreparedStatement stmt = conn.prepareStatement(sql)) {
 
         stmt.setInt(1, loanId);
@@ -181,7 +184,8 @@ public List<Loan> getAllLoan() {
     List<Loan> loans = new ArrayList<>();
     String sql = "SELECT l.*, c.* FROM Loan l JOIN Customer c ON l.customer_id = c.customer_id";
 
-    try (Connection conn = DBConnUtil.getDBConn();
+    try ( Connection conn = DBConnUtil.getDbConnection();
+
          PreparedStatement stmt = conn.prepareStatement(sql);
          ResultSet rs = stmt.executeQuery()) {
 
@@ -218,7 +222,8 @@ public List<Loan> getAllLoan() {
 public Loan getLoanById(int loanId) throws InvalidLoanException {
     String sql = "SELECT l.*, c.* FROM Loan l JOIN Customer c ON l.customer_id = c.customer_id WHERE l.loan_id = ?";
 
-    try (Connection conn = DBConnUtil.getDBConn();
+    try ( Connection conn = DBConnUtil.getDbConnection();
+
          PreparedStatement stmt = conn.prepareStatement(sql)) {
 
         stmt.setInt(1, loanId);
